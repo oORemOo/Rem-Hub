@@ -73,7 +73,7 @@ local function CreateToggle()
 
     local toggleButton = Instance.new("ImageButton")
     toggleButton.Name = "ToggleButton"
-    toggleButton.Image = "rbxassetid://112196145837803"
+    toggleButton.Image = "rbxassetid://14033419176"
     toggleButton.ImageTransparency = 0.3
     toggleButton.AnchorPoint = Vector2.new(0.5, 0.5)
     toggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
