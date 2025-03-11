@@ -130,7 +130,7 @@ function checkDevice()
         end
     end
 end
-checkDevice()
+CreateMainUI()
 
 local Function_Storage = {}
 
