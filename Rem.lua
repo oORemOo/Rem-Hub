@@ -1,11 +1,4 @@
-repeat
-    task.wait()
-until game:IsLoaded()
-
-local Players = game:GetService("Players")
-repeat
-    task.wait()
-until Players.LocalPlayer and Players.LocalPlayer.Character
+repeat wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
 
 getgenv().Settings = {
     WalkSpeedToggle = nil,
@@ -108,28 +101,28 @@ local function CreateToggle()
 end
 
 local Device;
--- แก้ไขส่วนนี้ในฟังก์ชัน checkDevice()
-local function CreateMainUI()
-    local mainUI = Instance.new("ScreenGui")
-    mainUI.Name = "RemHub"
-    mainUI.Parent = game:GetService("CoreGui")
-    mainUI.Enabled = true -- เริ่มต้นแสดง UI
-    return mainUI
-end
-
 function checkDevice()
     local player = game.Players.LocalPlayer
     if player then
         local UserInputService = game:GetService("UserInputService")
         
-        -- สร้าง UI หลัก "RemHub"
-        local mainUI = CreateMainUI()
-        
         if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
-            local RemToggle = CreateToggle()
-            RemToggle.MouseButton1Click:Connect(function()
-                -- สลับการแสดงผลของ UI หลัก
-                mainUI.Enabled = not mainUI.Enabled
+            local FeariseToggle = CreateToggle()
+            FeariseToggle.MouseButton1Click:Connect(function()
+                for _, guiObject in ipairs(game:GetService("CoreGui"):GetChildren()) do
+                    if guiObject.Name == "RemHub" and guiObject:IsA("ScreenGui") then
+                        for FrameIndex, FrameValue in pairs(guiObject:GetChildren()) do
+                            if FrameValue:IsA("Frame") and FrameValue:FindFirstChild("CanvasGroup") then
+                                FrameValue.Visible = not FrameValue.Visible
+                            end
+                        end
+                    end
+                end
+            end)
+            game:GetService("CoreGui").ChildRemoved:Connect(function(Value)
+                if Value.Name == "RemHub" then
+                    FeariseToggle.Parent.Parent:Destroy()
+                end
             end)
             Device = UDim2.fromOffset(480, 360)
         else
@@ -137,28 +130,7 @@ function checkDevice()
         end
     end
 end
-
-
-local Function_Storage = {}
-
-Function_Storage.CreateRemHubMobileToggle = function()
-    local mobileUI = Instance.new("ScreenGui")
-    mobileUI.Name = "RemHubMobileUI"
-    mobileUI.Parent = game:GetService("CoreGui")
-
-    -- สร้างปุ่ม Instant Kick
-    local instantKick = Instance.new("ImageButton")
-    instantKick.Name = "InstantKick"
-    instantKick.Image = "rbxassetid://112196145837803"
-    -- ตั้งค่าตำแหน่งและขนาดตามต้องการ...
-    instantKick.Parent = mobileUI
-
-    return {
-        RemHubMobileUI = mobileUI,
-        instantKickToggle = instantKick,
-        -- เพิ่มปุ่มอื่นๆ...
-    }
-end
+checkDevice()
 
 local FileName = tostring(game.Players.LocalPlayer.UserId).."_Settings.json"
 local BaseFolder = "RemHub"
@@ -201,10 +173,10 @@ local Window = Fluent:CreateWindow({
     Title = "Rem Hub" .. " | ".."AD".." | ".."[Version 0.1]",
     SubTitle = "by Rowlet/Blobby",
     TabWidth = 160,
-    Size = Device, -- ใช้ค่าจาก checkDevice()
-    Acrylic = false,
-    Theme = "Rose",
-    MinimizeKey = Enum.KeyCode.LeftControl
+    Size =  Device, --UDim2.fromOffset(480, 360), --default size (580, 460)
+    Acrylic = false, -- การเบลออาจตรวจจับได้ การตั้งค่านี้เป็น false จะปิดการเบลอทั้งหมด
+    Theme = "Rose", --Amethyst
+    MinimizeKey = Enum.KeyCode.LeftControl --RightControl
 })
 
 local Tabs = {
@@ -220,9 +192,7 @@ local Tabs = {
 }
 do
  
-    getgenv().Configs = {
-        ["Mobile Mode"] = true -- ตั้งค่าเป็น true เพื่อเปิดโหมดมือถือ
-    }
+
     -------------------------------------------------------[[ MOBILE SCRIPT ]]-------------------------------------------------------
     function checkDeviceUi()
         local player = game.Players.LocalPlayer
@@ -230,21 +200,15 @@ do
             local UserInputService = game:GetService("UserInputService")
             
             if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
-                local MobileUI = Function_Storage.CreateRemHubMobileToggle()
-    
-                MobileUI.instantKickToggle.MouseButton1Click:Connect(function()
+                if getgenv().Configs["Mobile Mode"] then
+                    local MobileUI = Function_Storage.CreateRemHubMobileToggle()
+
+                    MobileUI.instantKickToggle.MouseButton1Click:Connect(function()
                         Fluent:Notify({
                             Title = "Rem Hub",
                             Content = "Instant Kick Clicked",
                             Duration = 3
                         })
-                        Function_Storage.shootBall = function()
-                            local args = {
-                                [1] = getgenv().Settings.InputPower or 500,
-                                [4] = game:GetService("Players").LocalPlayer:GetMouse().Hit.Position
-                            }
-                            game:GetService("ReplicatedStorage").Packages.Knit.Services.BallService.RE.Shoot:FireServer(unpack(args))
-                        end
                     end)
                     MobileUI.kaiserImpackToggle.MouseButton1Click:Connect(function()
                         Fluent:Notify({
