@@ -205,7 +205,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 
 local Window = Fluent:CreateWindow({
     Title = "Rem Hub" .. " | ".."AD".." | ".."[Version 0.1]",
-    SubTitle = "by Rowlet/Blobby",
+    SubTitle = "by TheRme",
     TabWidth = 160,
     Size =  Device, --UDim2.fromOffset(480, 360), --default size (580, 460)
     Acrylic = false, -- การเบลออาจตรวจจับได้ การตั้งค่านี้เป็น false จะปิดการเบลอทั้งหมด
@@ -226,8 +226,11 @@ local Tabs = {
 }
 do
  
-
     -------------------------------------------------------[[ MOBILE SCRIPT ]]-------------------------------------------------------
+    getgenv().Configs = {
+        ["Mobile Mode"] = true, -- หรือ false ตามที่คุณต้องการ
+    }
+    
     function checkDeviceUi()
         local player = game.Players.LocalPlayer
         if player then
