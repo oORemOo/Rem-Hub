@@ -1,11 +1,4 @@
-repeat
-    task.wait()
-until game:IsLoaded()
-
-local Players = game:GetService("Players")
-repeat
-    task.wait()
-until Players.LocalPlayer and Players.LocalPlayer.Character
+repeat wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
 
 getgenv().Settings = {
     WalkSpeedToggle = nil,
