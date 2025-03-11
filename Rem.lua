@@ -234,9 +234,10 @@ do
             local UserInputService = game:GetService("UserInputService")
             
             if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
-                if getgenv().Configs["Mobile Mode"] then
+                -- ตรวจสอบว่า Configs และ Configs["Mobile Mode"] มีค่าที่ถูกต้อง
+                if getgenv().Configs and getgenv().Configs["Mobile Mode"] ~= nil then
                     local MobileUI = Function_Storage.CreateRemHubMobileToggle()
-
+    
                     MobileUI.instantKickToggle.MouseButton1Click:Connect(function()
                         Fluent:Notify({
                             Title = "Rem Hub",
@@ -278,7 +279,7 @@ do
                         end
                     end)
                 else
-                    warn("Error: Your Forget Configs")    
+                    warn("Error: Configs or Mobile Mode is not defined")
                 end
             end
         end
