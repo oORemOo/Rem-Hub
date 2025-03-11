@@ -168,6 +168,7 @@ LoadSetting()
 local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/oORemOo/Rem-Hub/refs/heads/main/Fluent.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/oORemOo/Rem-Hub/refs/heads/main/InterfaceManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Bocchi-World/Bocchi-Main/refs/heads/main/FPSBooster.lua", delay = 0.5, requireFPS = true))()
 
 local Window = Fluent:CreateWindow({
     Title = "Rem Hub" .. " | ".."AD".." | ".."[Version 0.1]",
