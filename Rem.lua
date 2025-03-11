@@ -56,45 +56,79 @@ local function CreateToggle()
     toggleGui.ResetOnSpawn = false
     toggleGui.Parent = game:GetService("CoreGui")
 
+    -- สร้าง Frame สำหรับปุ่ม
     local mainFrame = Instance.new("Frame")
     mainFrame.Name = "MainFrame"
     mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
     mainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    mainFrame.BackgroundTransparency = 1
+    mainFrame.BackgroundTransparency = 1 -- ทำให้พื้นหลังโปร่งใส
     mainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
     mainFrame.BorderSizePixel = 0
-    mainFrame.Position = UDim2.fromScale(0.925, 0.116)
-    mainFrame.Size = UDim2.fromScale(0.083, 0.148)
+    mainFrame.Position = UDim2.fromScale(0.075, 0.116) -- ตำแหน่งเริ่มต้น
+    mainFrame.Size = UDim2.fromOffset(70, 70) -- ขนาดใหญ่ขึ้น (60x60 พิกเซล)
 
+    -- เพิ่มมุมโค้งให้ Frame
     local uICorner = Instance.new("UICorner")
     uICorner.Name = "UICorner"
-    uICorner.CornerRadius = UDim.new(1, 0)
+    uICorner.CornerRadius = UDim.new(1, 0) -- ทำให้มุมโค้งเต็มที่
     uICorner.Parent = mainFrame
 
+    -- สร้างปุ่ม
     local toggleButton = Instance.new("ImageButton")
     toggleButton.Name = "ToggleButton"
     toggleButton.Image = "rbxassetid://14033419176"
-    toggleButton.ImageTransparency = 0.3
+    toggleButton.ImageTransparency = 0 -- ไม่มีเอฟเฟกต์โปร่งแสง
     toggleButton.AnchorPoint = Vector2.new(0.5, 0.5)
     toggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    toggleButton.BackgroundTransparency = 1
+    toggleButton.BackgroundTransparency = 1 -- ทำให้พื้นหลังโปร่งใส
     toggleButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
     toggleButton.BorderSizePixel = 0
-    toggleButton.Position = UDim2.fromScale(0.491, 0.482)
-    toggleButton.Size = UDim2.fromScale(1, 1)
+    toggleButton.Position = UDim2.fromScale(0.5, 0.5) -- ตรงกลาง Frame
+    toggleButton.Size = UDim2.fromScale(1, 1) -- ขนาดเต็ม Frame
 
+    -- เพิ่มมุมโค้งให้ปุ่ม
     local uICorner1 = Instance.new("UICorner")
     uICorner1.Name = "UICorner"
-    uICorner1.CornerRadius = UDim.new(1, 0)
+    uICorner1.CornerRadius = UDim.new(1, 0) -- ทำให้ปุ่มเป็นวงกลม
     uICorner1.Parent = toggleButton
 
+    -- ฟังก์ชันลากและวาง
+    local UserInputService = game:GetService("UserInputService")
+    local dragging = false
+    local dragInput, dragStart, startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+
+    toggleButton.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = mainFrame.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    toggleButton.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+
     toggleButton.Parent = mainFrame
-
-    local uIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
-    uIAspectRatioConstraint.Name = "UIAspectRatioConstraint"
-    uIAspectRatioConstraint.AspectRatio = 1
-    uIAspectRatioConstraint.Parent = mainFrame
-
     mainFrame.Parent = toggleGui
 
     return toggleButton
