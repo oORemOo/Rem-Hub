@@ -71,17 +71,15 @@ local function CreateToggle()
     uICorner.CornerRadius = UDim.new(1, 0)
     uICorner.Parent = mainFrame
 
+    -- ปุ่มแบบ Material Design
     local toggleButton = Instance.new("ImageButton")
     toggleButton.Name = "ToggleButton"
-    toggleButton.Image = "rbxassetid://112196145837803"
-    toggleButton.ImageTransparency = 0.3
+    toggleButton.Image = "rbxassetid://14033419176"
+    toggleButton.ImageColor3 = Color3.fromRGB(170, 0, 255) -- สีม่วง
+    toggleButton.ScaleType = Enum.ScaleType.Fit
     toggleButton.AnchorPoint = Vector2.new(0.5, 0.5)
-    toggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    toggleButton.BackgroundTransparency = 1
-    toggleButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    toggleButton.BorderSizePixel = 0
-    toggleButton.Position = UDim2.fromScale(0.491, 0.482)
-    toggleButton.Size = UDim2.fromScale(1, 1)
+    toggleButton.Position = UDim2.fromScale(0.95, 0.1)
+    toggleButton.Size = UDim2.fromOffset(40, 40)
 
     local uICorner1 = Instance.new("UICorner")
     uICorner1.Name = "UICorner"
@@ -97,6 +95,19 @@ local function CreateToggle()
 
     mainFrame.Parent = toggleGui
 
+     -- เอฟเฟกต์เมื่อ Hover
+     toggleButton.MouseEnter:Connect(function()
+        game:GetService("TweenService"):Create(toggleButton, TweenInfo.new(0.2), {
+            ImageColor3 = Color3.fromRGB(255, 85, 255)
+        }):Play()
+    end)
+    
+    toggleButton.MouseLeave:Connect(function()
+        game:GetService("TweenService"):Create(toggleButton, TweenInfo.new(0.2), {
+            ImageColor3 = Color3.fromRGB(170, 0, 255)
+        }):Play()
+    end)
+
     return toggleButton
 end
 
@@ -110,11 +121,16 @@ function checkDevice()
             local FeariseToggle = CreateToggle()
             FeariseToggle.MouseButton1Click:Connect(function()
                 for _, guiObject in ipairs(game:GetService("CoreGui"):GetChildren()) do
-                    if guiObject.Name == "RemHub" and guiObject:IsA("ScreenGui") then
-                        for FrameIndex, FrameValue in pairs(guiObject:GetChildren()) do
-                            if FrameValue:IsA("Frame") and FrameValue:FindFirstChild("CanvasGroup") then
-                                FrameValue.Visible = not FrameValue.Visible
-                            end
+                    if guiObject.Name == "RemHub" then
+                        local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad)
+                        if guiObject.Enabled then
+                            game:GetService("TweenService"):Create(guiObject, tweenInfo, {
+                                Position = UDim2.fromScale(1.5, 0.5) -- ปิดด้วยการเลื่อนออก
+                            }):Play()
+                        else
+                            game:GetService("TweenService"):Create(guiObject, tweenInfo, {
+                                Position = UDim2.fromScale(0.5, 0.5) -- เปิดด้วยการเลื่อนเข้า
+                            }):Play()
                         end
                     end
                 end
@@ -174,10 +190,11 @@ local Window = Fluent:CreateWindow({
     Title = "Rem Hub" .. " | ".."AD".." | ".."[Version 0.1]",
     SubTitle = "by Rowlet/Blobby",
     TabWidth = 160,
-    Size =  Device, --UDim2.fromOffset(480, 360), --default size (580, 460)
-    Acrylic = false, -- การเบลออาจตรวจจับได้ การตั้งค่านี้เป็น false จะปิดการเบลอทั้งหมด
-    Theme = "Rose", --Amethyst
-    MinimizeKey = Enum.KeyCode.LeftControl --RightControl
+    Size = Device,
+    Acrylic = true, -- เปิดเอฟเฟกต์เบลอ
+    AcrylicTransparency = 0.85, -- ความโปร่งใส
+    Theme = "Amethyst", -- เปลี่ยนธีมเป็นสีม่วง
+    MinimizeKey = Enum.KeyCode.LeftControl
 })
 
 local Tabs = {
@@ -202,7 +219,38 @@ do
             
             if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
                 if getgenv().Configs["Mobile Mode"] then
-                    local MobileUI = Function_Storage.CreateRemHubMobileToggle()
+                    local MobileUI = Function_Storage.CreateRemHubMobileToggle = function()
+                        local mobileUI = Instance.new("ScreenGui")
+                        mobileUI.Name = "RemHubMobileUI"
+                        mobileUI.Parent = game:GetService("CoreGui")
+                    
+                        local mainFrame = Instance.new("Frame")
+                        mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+                        mainFrame.BackgroundTransparency = 0.3
+                        mainFrame.Size = UDim2.fromScale(1, 1)
+                        mainFrame.Parent = mobileUI
+                    
+                        -- ปุ่มแบบ Floating Action Button
+                        local function CreateFAB(name, position)
+                            local button = Instance.new("ImageButton")
+                            button.Name = name
+                            button.Image = "rbxassetid://112196145837803"
+                            button.Size = UDim2.fromOffset(60, 60)
+                            button.Position = position
+                            button.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
+                            button.ImageColor3 = Color3.fromRGB(255, 255, 255)
+                            button.Parent = mainFrame
+                            
+                            local shadow = Instance.new("ImageLabel")
+                            shadow.Image = "rbxassetid://6190040010"
+                            shadow.Size = UDim2.fromScale(1.2, 1.2)
+                            shadow.Position = UDim2.fromScale(-0.1, -0.1)
+                            shadow.BackgroundTransparency = 1
+                            shadow.Parent = button
+                            
+                            return button
+                        end
+                    
 
                     MobileUI.instantKickToggle.MouseButton1Click:Connect(function()
                         Fluent:Notify({
@@ -278,8 +326,12 @@ end)
 
 Fluent:Notify({
     Title = "Rem Hub",
-    Content = "Anti AFK Is Actived",
-    Duration = 5
+    Content = "Anti AFK Is Activated",
+    Duration = 5,
+    Icon = "rbxassetid://14033419176", -- เพิ่มไอคอน
+    IconColor = Color3.fromRGB(170, 0, 255),
+    TitleColor = Color3.fromRGB(255, 255, 255),
+    ContentColor = Color3.fromRGB(200, 200, 200)
 })
 
 Window:SelectTab(1)
