@@ -1,4 +1,11 @@
-repeat wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
+repeat
+    task.wait()
+until game:IsLoaded()
+
+local Players = game:GetService("Players")
+repeat
+    task.wait()
+until Players.LocalPlayer and Players.LocalPlayer.Character
 
 getgenv().Settings = {
     WalkSpeedToggle = nil,
@@ -130,7 +137,7 @@ function checkDevice()
         end
     end
 end
-CreateMainUI()
+
 
 local Function_Storage = {}
 
@@ -139,7 +146,13 @@ Function_Storage.CreateRemHubMobileToggle = function()
     mobileUI.Name = "RemHubMobileUI"
     mobileUI.Parent = game:GetService("CoreGui")
 
-    -- ออกแบบปุ่ม Mobile ตามต้องการ...
+    -- สร้างปุ่ม Instant Kick
+    local instantKick = Instance.new("ImageButton")
+    instantKick.Name = "InstantKick"
+    instantKick.Image = "rbxassetid://112196145837803"
+    -- ตั้งค่าตำแหน่งและขนาดตามต้องการ...
+    instantKick.Parent = mobileUI
+
     return {
         RemHubMobileUI = mobileUI,
         instantKickToggle = instantKick,
@@ -207,7 +220,9 @@ local Tabs = {
 }
 do
  
-
+    getgenv().Configs = {
+        ["Mobile Mode"] = true -- ตั้งค่าเป็น true เพื่อเปิดโหมดมือถือ
+    }
     -------------------------------------------------------[[ MOBILE SCRIPT ]]-------------------------------------------------------
     function checkDeviceUi()
         local player = game.Players.LocalPlayer
@@ -223,7 +238,13 @@ do
                             Content = "Instant Kick Clicked",
                             Duration = 3
                         })
-                        Function_Storage.shootBall()
+                        Function_Storage.shootBall = function()
+                            local args = {
+                                [1] = getgenv().Settings.InputPower or 500,
+                                [4] = game:GetService("Players").LocalPlayer:GetMouse().Hit.Position
+                            }
+                            game:GetService("ReplicatedStorage").Packages.Knit.Services.BallService.RE.Shoot:FireServer(unpack(args))
+                        end
                     end)
                     MobileUI.kaiserImpackToggle.MouseButton1Click:Connect(function()
                         Fluent:Notify({
