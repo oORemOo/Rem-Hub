@@ -165,9 +165,9 @@ end
 
 LoadSetting()
 
-local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/imyourlio/Cracked/refs/heads/main/Fearise%20UI"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/oORemOo/Rem-Hub/refs/heads/main/Fluent.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/oORemOo/Rem-Hub/refs/heads/main/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/oORemOo/Rem-Hub/refs/heads/main/InterfaceManager.lua"))()
 
 local Window = Fluent:CreateWindow({
     Title = "Rem Hub" .. " | ".."AD".." | ".."[Version 0.1]",
@@ -201,7 +201,7 @@ do
             
             if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
                 if getgenv().Configs["Mobile Mode"] then
-                    local MobileUI = Function_Storage.CreateFeariseHubMobileToggle()
+                    local MobileUI = Function_Storage.CreateRemHubMobileToggle()
 
                     MobileUI.instantKickToggle.MouseButton1Click:Connect(function()
                         Fluent:Notify({
@@ -240,7 +240,7 @@ do
                     end)
                     game:GetService("CoreGui").ChildRemoved:Connect(function(Value)
                         if Value.Name == "RemHub" then
-                            MobileUI.feariseHubMobileUI:Destroy()
+                            MobileUI.RemHubMobileUI:Destroy()
                         end
                     end)
                 else
