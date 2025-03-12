@@ -72,6 +72,7 @@ local function CreateToggle()
     uICorner.Name = "UICorner"
     uICorner.CornerRadius = UDim.new(1, 0) -- ทำให้มุมโค้งเต็มที่
     uICorner.Parent = mainFrame
+    
 
     -- สร้างปุ่ม
     local toggleButton = Instance.new("ImageButton")
@@ -96,6 +97,9 @@ local function CreateToggle()
     local UserInputService = game:GetService("UserInputService")
     local dragging = false
     local dragInput, dragStart, startPos
+
+    
+
 
     local function update(input)
         local delta = input.Position - dragStart
@@ -209,7 +213,7 @@ local Window = Fluent:CreateWindow({
     TabWidth = 160,
     Size =  Device, --UDim2.fromOffset(480, 360), --default size (580, 460)
     Acrylic = false, -- การเบลออาจตรวจจับได้ การตั้งค่านี้เป็น false จะปิดการเบลอทั้งหมด
-    Theme = "Rose", --Amethyst
+    Theme = "Light", -- เปลี่ยนธีมเป็น Amethyst (หรือธีมอื่นๆ ที่มีใน Fluent)
     MinimizeKey = Enum.KeyCode.LeftControl --RightControl
 })
 
@@ -227,18 +231,14 @@ local Tabs = {
 do
  
     -------------------------------------------------------[[ MOBILE SCRIPT ]]-------------------------------------------------------
-    getgenv().Configs = {
-        ["Mobile Mode"] = true, -- หรือ false ตามที่คุณต้องการ
-    }
-    
     function checkDeviceUi()
         local player = game.Players.LocalPlayer
         if player then
             local UserInputService = game:GetService("UserInputService")
             
             if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
-                -- ตรวจสอบว่า Configs และ Configs["Mobile Mode"] มีค่าที่ถูกต้อง
-                if getgenv().Configs and getgenv().Configs["Mobile Mode"] ~= nil then
+                -- ตรวจสอบว่า Configs ถูกกำหนดค่าและมี Mobile Mode
+                if getgenv().Configs and getgenv().Configs["Mobile Mode"] then
                     local MobileUI = Function_Storage.CreateRemHubMobileToggle()
     
                     MobileUI.instantKickToggle.MouseButton1Click:Connect(function()
