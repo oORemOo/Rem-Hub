@@ -219,7 +219,7 @@ local Window = Fluent:CreateWindow({
 
 local Tabs = {
     --[[ Tabs --]]
-    pageLegit = Window:AddTab({ Title = "Legit", Icon = "align-justify" }),
+    pagemain = Window:AddTab({ Title = "Main", Icon = "align-justify" }),
     pageVisual = Window:AddTab({ Title = "Visual", Icon = "view" }),
     pageKaitan = Window:AddTab({ Title = "Kaitan", Icon = "crown" }),
     pageOP = Window:AddTab({ Title = "OP", Icon = "apple" }),
@@ -230,6 +230,233 @@ local Tabs = {
 }
 do
  
+    -------------------------------------------------------[[ main ]]-------------------------------------------------------
+
+
+    local function OptimizeGame()
+        -- ปรับแต่ง Lighting เพื่อลดเอฟเฟคที่ไม่จำเป็น
+        local lighting = game:GetService("Lighting")
+        lighting.GlobalShadows = false
+        lighting.FogEnd = 100000
+        lighting.Brightness = 2
+        lighting.Outlines = false
+        lighting.ShadowSoftness = 0
+        lighting.GeographicLatitude = 0
+        lighting.EnvironmentDiffuseScale = 0
+        lighting.EnvironmentSpecularScale = 0
+    
+        -- ปิดการแสดงผลของ PostProcessing Effects
+        if lighting:FindFirstChild("PostProcessing") then
+            lighting.PostProcessing.Enabled = false
+        end
+    
+        -- ลบอนุภาค (Particles) ที่ไม่จำเป็น
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("ParticleEmitter") or instance:IsA("Trail") then
+                instance:Destroy()
+            end
+        end
+    
+        -- ปิดการแสดงผลของ Decals (ภาพ貼图) ที่ไม่จำเป็น
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("Decal") then
+                instance.Transparency = 1
+            end
+        end
+    
+        -- ปิดการแสดงผลของ MeshPart ที่ไม่จำเป็น
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("MeshPart") then
+                instance.Transparency = 1
+            end
+        end
+    
+        -- ปิดการแสดงผลของ SurfaceGui (เช่น ป้ายข้อความ)
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("SurfaceGui") then
+                instance.Enabled = false
+            end
+        end
+    
+        -- ปิดการแสดงผลของ BillboardGui (เช่น ป้ายข้อความลอย)
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("BillboardGui") then
+                instance.Enabled = false
+            end
+        end
+    
+        -- ปิดการแสดงผลของ Sparkles (แสงระยิบระยับ)
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("Sparkles") then
+                instance.Enabled = false
+            end
+        end
+    
+        -- ปิดการแสดงผลของ Smoke, Fire, และเอฟเฟคอื่นๆ
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("Smoke") or instance:IsA("Fire") or instance:IsA("Explosion") then
+                instance.Enabled = false
+            end
+        end
+    
+        -- ปิดการแสดงผลของ Sound ที่ไม่จำเป็น
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("Sound") then
+                instance:Stop()
+            end
+        end
+    
+        -- ปิดการแสดงผลของ Animation ที่ไม่จำเป็น
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("AnimationController") or instance:IsA("Animator") then
+                instance:Destroy()
+            end
+        end
+    
+        -- ปิดการแสดงผลของ Terrain Detail (รายละเอียดพื้นผิว)
+        local terrain = workspace:FindFirstChildOfClass("Terrain")
+        if terrain then
+            terrain.Decoration = false
+            terrain.WaterReflectance = 0
+            terrain.WaterTransparency = 1
+            terrain.WaterWaveSize = 0
+            terrain.WaterWaveSpeed = 0
+        end
+    
+        -- ปิดการแสดงผลของ BasePart ที่ไม่จำเป็น
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("BasePart") then
+                instance.Reflectance = 0
+                instance.Material = Enum.Material.Plastic
+                instance.CastShadow = false
+            end
+        end
+    
+        -- ปิดการแสดงผลของ Model ที่ไม่จำเป็น
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("Model") then
+                instance.PrimaryPart = nil
+            end
+        end
+    
+        -- ปิดการแสดงผลของ Humanoid ที่ไม่จำเป็น
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("Humanoid") then
+                instance.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+            end
+        end
+    end
+    
+    local function RevertOptimization()
+        -- ย้อนกลับการปรับแต่งกราฟิก
+        local lighting = game:GetService("Lighting")
+        lighting.GlobalShadows = true
+        lighting.FogEnd = 100000
+        lighting.Brightness = 1
+        lighting.Outlines = true
+        lighting.ShadowSoftness = 0.5
+        lighting.GeographicLatitude = 41.73
+        lighting.EnvironmentDiffuseScale = 1
+        lighting.EnvironmentSpecularScale = 1
+    
+        -- เปิดการแสดงผลของ PostProcessing Effects
+        if lighting:FindFirstChild("PostProcessing") then
+            lighting.PostProcessing.Enabled = true
+        end
+    
+        -- เปิดการแสดงผลของ Decals
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("Decal") then
+                instance.Transparency = 0
+            end
+        end
+    
+        -- เปิดการแสดงผลของ MeshPart
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("MeshPart") then
+                instance.Transparency = 0
+            end
+        end
+    
+        -- เปิดการแสดงผลของ SurfaceGui และ BillboardGui
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("SurfaceGui") or instance:IsA("BillboardGui") then
+                instance.Enabled = true
+            end
+        end
+    
+        -- เปิดการแสดงผลของ Sparkles, Smoke, Fire
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("Sparkles") or instance:IsA("Smoke") or instance:IsA("Fire") or instance:IsA("Explosion") then
+                instance.Enabled = true
+            end
+        end
+    
+        -- เปิดการแสดงผลของ Sound
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("Sound") then
+                instance:Play()
+            end
+        end
+    
+        -- เปิดการแสดงผลของ Terrain Detail
+        local terrain = workspace:FindFirstChildOfClass("Terrain")
+        if terrain then
+            terrain.Decoration = true
+            terrain.WaterReflectance = 0.5
+            terrain.WaterTransparency = 0.5
+            terrain.WaterWaveSize = 0.1
+            terrain.WaterWaveSpeed = 0.1
+        end
+    
+        -- เปิดการแสดงผลของ BasePart
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("BasePart") then
+                instance.Reflectance = 0.5
+                instance.Material = Enum.Material.SmoothPlastic
+                instance.CastShadow = true
+            end
+        end
+    
+        -- เปิดการแสดงผลของ Model
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("Model") then
+                instance.PrimaryPart = instance.PrimaryPart or instance:FindFirstChildWhichIsA("BasePart")
+            end
+        end
+    
+        -- เปิดการแสดงผลของ Humanoid
+        for _, instance in pairs(workspace:GetDescendants()) do
+            if instance:IsA("Humanoid") then
+                instance.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer
+            end
+        end
+    end
+    
+    -- เพิ่ม Toggle ในแท็บ pagemain
+    local OptimizeSection = Tabs.pagemain:AddSection("bootfps")
+    
+    local OptimizeToggle = Tabs.pagemain:AddToggle("OptimizeToggle", {
+        Title = "Optimize Graphics",
+        Description = "Enable to improve FPS by reducing graphics and effects.",
+        Default = getgenv().Settings.OptimizeToggle or false,
+        Callback = function(Value)
+            getgenv().Settings.OptimizeToggle = Value
+            SaveSetting()
+            if Value then
+                OptimizeGame()
+            else
+                RevertOptimization()
+            end
+        end
+    })
+    
+    -- บันทึกสถานะ Toggle
+    OptimizeToggle:OnChanged(function(Value)
+        getgenv().Settings.OptimizeToggle = Value
+        SaveSetting()
+    end)
+
     -------------------------------------------------------[[ MOBILE SCRIPT ]]-------------------------------------------------------
     function checkDeviceUi()
         local player = game.Players.LocalPlayer
