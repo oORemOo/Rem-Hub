@@ -220,6 +220,12 @@ local Window = Fluent:CreateWindow({
 local Tabs = {
     --[[ Tabs --]]
     pagemain = Window:AddTab({ Title = "Main", Icon = "align-justify" }),
+    pageVisual = Window:AddTab({ Title = "Visual", Icon = "view" }),
+    pageKaitan = Window:AddTab({ Title = "Kaitan", Icon = "crown" }),
+    pageOP = Window:AddTab({ Title = "OP", Icon = "apple" }),
+    pageRage = Window:AddTab({ Title = "Rage", Icon = "bug" }),
+    pageSpin = Window:AddTab({ Title = "Spin", Icon = "box" }),
+    pageItem = Window:AddTab({ Title = "Item", Icon = "archive" }),
     pageSettings = Window:AddTab({ Title = "Settings", Icon = "settings" }),
 }
 do
